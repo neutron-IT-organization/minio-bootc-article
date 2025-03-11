@@ -1,0 +1,1140 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Home - Déployer MinIO avec BootC</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-introduction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Déployer MinIO avec BootC" class="md-header__button md-logo" aria-label="Déployer MinIO avec BootC" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Déployer MinIO avec BootC
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/neutron-IT-organization/minio-bootc-article" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    neutron-IT-organization/minio-bootc-article
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Déployer MinIO avec BootC" class="md-nav__button md-logo" aria-label="Déployer MinIO avec BootC" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Déployer MinIO avec BootC
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/neutron-IT-organization/minio-bootc-article" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    neutron-IT-organization/minio-bootc-article
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#presentation-de-minio-et-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Présentation de MinIO et BootC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importance-du-stockage-dobjets-et-des-conteneurs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Importance du stockage d'objets et des conteneurs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-quest-ce-que-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Qu'est-ce que MinIO ?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Qu&#39;est-ce que MinIO ?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-de-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description de MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avantages-et-caracteristiques-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages et caractéristiques principales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-quest-ce-que-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Qu'est-ce que BootC ?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Qu&#39;est-ce que BootC ?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-de-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description de BootC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avantages-et-caracteristiques-principales_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages et caractéristiques principales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Prérequis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Prérequis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liste-des-elements-necessaires-avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Liste des éléments nécessaires avant de commencer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-etapes-de-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Étapes de déploiement
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Étapes de déploiement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-creer-le-containerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 : Créer le Containerfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-creer-le-fichier-configtoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 : Créer le fichier config.toml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-construire-limage-bootc-locale-pour-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 : Construire l'image Bootc locale pour MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-4-creer-liso-pour-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 4 : Créer l'ISO pour MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-5-installer-centos-stream-9-avec-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 5 : Installer CentOS Stream 9 avec MinIO
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configuration-avancee-optionnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Configuration avancée (optionnel)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Configuration avancée (optionnel)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options-de-configuration-supplementaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options de configuration supplémentaires
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#securite-et-optimisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et optimisation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recapitulatif-des-avantages-de-minio-et-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Récapitulatif des avantages de MinIO et BootC
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ressources-supplementaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Ressources supplémentaires
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Ressources supplémentaires">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liens-vers-les-documentations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Liens vers les documentations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#presentation-de-minio-et-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Présentation de MinIO et BootC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importance-du-stockage-dobjets-et-des-conteneurs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Importance du stockage d'objets et des conteneurs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-quest-ce-que-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Qu'est-ce que MinIO ?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Qu&#39;est-ce que MinIO ?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-de-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description de MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avantages-et-caracteristiques-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages et caractéristiques principales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-quest-ce-que-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Qu'est-ce que BootC ?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Qu&#39;est-ce que BootC ?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description-de-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description de BootC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avantages-et-caracteristiques-principales_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages et caractéristiques principales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Prérequis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Prérequis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liste-des-elements-necessaires-avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Liste des éléments nécessaires avant de commencer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-etapes-de-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Étapes de déploiement
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Étapes de déploiement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-creer-le-containerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 : Créer le Containerfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-creer-le-fichier-configtoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 : Créer le fichier config.toml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-construire-limage-bootc-locale-pour-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 : Construire l'image Bootc locale pour MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-4-creer-liso-pour-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 4 : Créer l'ISO pour MinIO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-5-installer-centos-stream-9-avec-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 5 : Installer CentOS Stream 9 avec MinIO
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configuration-avancee-optionnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Configuration avancée (optionnel)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Configuration avancée (optionnel)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options-de-configuration-supplementaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options de configuration supplémentaires
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#securite-et-optimisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et optimisation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recapitulatif-des-avantages-de-minio-et-bootc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Récapitulatif des avantages de MinIO et BootC
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ressources-supplementaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Ressources supplémentaires
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Ressources supplémentaires">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#liens-vers-les-documentations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Liens vers les documentations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<p><img alt="" src="images/banner.png" /></p>
+<h1 id="deployer-minio-avec-bootc">Déployer MinIO avec BootC</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="presentation-de-minio-et-bootc">Présentation de MinIO et BootC</h3>
+<p>MinIO est une solution de stockage d'objets open-source qui permet de créer des infrastructures de stockage évolutives et résilientes. BootC, quant à lui, est un outil de gestion de conteneurs qui facilite le déploiement et la gestion des applications conteneurisées.</p>
+<h3 id="importance-du-stockage-dobjets-et-des-conteneurs">Importance du stockage d'objets et des conteneurs</h3>
+<p>Le stockage d'objets est essentiel pour gérer de grandes quantités de données non structurées, tandis que les conteneurs permettent de déployer des applications de manière cohérente et isolée. La combinaison de MinIO et BootC offre une solution puissante pour le stockage et la gestion des données dans des environnements modernes.</p>
+<h2 id="2-quest-ce-que-minio">2. Qu'est-ce que MinIO ?</h2>
+<h3 id="description-de-minio">Description de MinIO</h3>
+<p>MinIO est un serveur de stockage d'objets compatible avec le protocole Amazon S3. Il est conçu pour être léger, rapide et facile à déployer. MinIO peut être utilisé pour stocker des photos, des vidéos, des sauvegardes et d'autres types de données non structurées.</p>
+<h3 id="avantages-et-caracteristiques-principales">Avantages et caractéristiques principales</h3>
+<ul>
+<li><strong>Compatibilité S3</strong> : MinIO est entièrement compatible avec le protocole Amazon S3, ce qui permet une intégration facile avec les outils et applications existants.</li>
+<li><strong>Haute performance</strong> : MinIO est optimisé pour offrir des performances élevées en termes de débit et de latence.</li>
+<li><strong>Évolutivité</strong> : MinIO peut être déployé sur un seul nœud ou sur plusieurs nœuds pour répondre aux besoins de stockage croissants.</li>
+<li><strong>Sécurité</strong> : MinIO offre des fonctionnalités de sécurité robustes, telles que le chiffrement des données et l'authentification.</li>
+</ul>
+<h2 id="3-quest-ce-que-bootc">3. Qu'est-ce que BootC ?</h2>
+<h3 id="description-de-bootc">Description de BootC</h3>
+<p>BootC est un outil de gestion de conteneurs qui simplifie le déploiement, la gestion et l'orchestration des applications conteneurisées. Il est conçu pour être léger et facile à utiliser, tout en offrant des fonctionnalités puissantes pour les environnements de production. BootC est au cœur des conteneurs amorçables, qui permettent de gérer des systèmes d'exploitation immuables via des images de conteneurs OCI/Docker.</p>
+<h3 id="avantages-et-caracteristiques-principales_1">Avantages et caractéristiques principales</h3>
+<ul>
+<li><strong>Approche unifiée pour DevOps</strong> : BootC permet de gérer l'ensemble du système d'exploitation via des outils et concepts basés sur les conteneurs, y compris GitOps et CI/CD.</li>
+<li><strong>Sécurité simplifiée</strong> : Les mises à jour de sécurité peuvent être appliquées à l'ensemble du système d'exploitation, y compris le noyau, les pilotes et le chargeur d'amorçage, en utilisant des outils de sécurité avancés pour les conteneurs.</li>
+<li><strong>Intégration rapide et écosystème</strong> : BootC s'intègre dans un vaste écosystème d'outils et de technologies autour des conteneurs, permettant de déployer et de gérer des systèmes Linux à grande échelle.</li>
+</ul>
+<h2 id="4-prerequis">4. Prérequis</h2>
+<h3 id="liste-des-elements-necessaires-avant-de-commencer">Liste des éléments nécessaires avant de commencer</h3>
+<ul>
+<li><strong>Podman</strong> installé sur votre système</li>
+<li>Espace disque suffisant pour le stockage des conteneurs et des fichiers de sortie</li>
+</ul>
+<h2 id="5-etapes-de-deploiement">5. Étapes de déploiement</h2>
+<h3 id="etape-1-creer-le-containerfile">Étape 1 : Créer le <code>Containerfile</code></h3>
+<p>Adaptez le <code>Containerfile</code> suivant à vos besoins :</p>
+<pre><code class="language-dockerfile">FROM quay.io/centos/centos:stream9 as builder
+
+RUN dnf install -y wget
+RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio
+
+FROM quay.io/centos-bootc/centos-bootc:stream9
+
+COPY --from=builder --chmod=755 /minio /usr/local/bin/minio
+
+RUN cat &lt;&lt;'EOF' &gt; /etc/systemd/system/minio.service
+[Unit]
+Description=MinIO
+Documentation=https://min.io/docs/minio/linux/index.html
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable=/usr/local/bin/minio
+
+[Service]
+WorkingDirectory=/usr/local
+
+User=minio
+Group=minio
+ProtectProc=invisible
+
+EnvironmentFile=-/etc/default/minio
+ExecStartPre=/bin/bash -c &quot;if [ -z \&quot;$MINIO_VOLUMES\&quot; ]; then echo \&quot;Variable MINIO_VOLUMES not set in /etc/default/minio\&quot;; exit 1; fi&quot;
+ExecStart=/usr/local/bin/minio server $MINIO_OPTS $MINIO_VOLUMES
+
+# MinIO RELEASE.2023-05-04T21-44-30Z adds support for Type=notify (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=)
+# This may improve systemctl setups where other services use `After=minio.server`
+# Uncomment the line to enable the functionality
+# Type=notify
+
+# Let systemd restart this service always
+Restart=always
+
+# Specifies the maximum file descriptor number that can be opened by this process
+LimitNOFILE=65536
+
+# Specifies the maximum number of threads this process can create
+TasksMax=infinity
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+RUN cat &lt;&lt;'EOF' &gt; /etc/default/minio
+# MINIO_ROOT_USER and MINIO_ROOT_PASSWORD sets the root account for the MinIO server.
+# This user has unrestricted permissions to perform S3 and administrative API operations on any resource in the deployment.
+# Omit to use the default values 'minioadmin:minioadmin'.
+# MinIO recommends setting non-default values as a best practice, regardless of environment
+
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin
+
+# MINIO_VOLUMES sets the storage volume or path to use for the MinIO server.
+
+MINIO_VOLUMES=&quot;/home/minio&quot;
+
+# MINIO_OPTS sets any additional commandline options to pass to the MinIO server.
+# For example, `--console-address :9001` sets the MinIO Console listen port
+MINIO_OPTS=&quot;--console-address :9001&quot;
+EOF
+
+WORKDIR /home
+
+RUN mkdir minio
+
+RUN systemctl enable minio.service
+</code></pre>
+<h3 id="etape-2-creer-le-fichier-configtoml">Étape 2 : Créer le fichier <code>config.toml</code></h3>
+<p>Adaptez le fichier <code>config.toml</code> suivant à vos besoins : </p>
+<pre><code class="language-toml">[customizations.installer.kickstart]
+contents = &quot;&quot;&quot;
+# Non-interactive text mode installation
+text --non-interactive
+reboot --eject
+
+# Set language and keyboard layout
+lang en_US
+keyboard --vckeymap=fr --xlayouts='fr'
+
+# Network configuration
+network --bootproto=dhcp --device=link --activate --onboot=on
+
+zerombr
+clearpart --all --initlabel --disklabel=gpt
+autopart --noswap --type=lvm --fstype=xfs 
+
+# Create a user with SSH key
+user --name=minio --password=toto --shell=/bin/bash --groups=wheel
+
+%post
+# Configure sudo for the user
+echo &quot;minio ALL=(ALL) NOPASSWD: ALL&quot; &gt; /etc/sudoers.d/minio
+chmod 440 /etc/sudoers.d/minio
+%end
+&quot;&quot;&quot;
+</code></pre>
+<h3 id="etape-3-construire-limage-bootc-locale-pour-minio">Étape 3 : Construire l'image Bootc locale pour MinIO</h3>
+<ol>
+<li>Définissez vos identifiants Red Hat et le nom de l'image :</li>
+</ol>
+<p><code>bash
+   export IMAGE_NAME=minio-centos-bootc</code></p>
+<ol>
+<li>Exécutez la commande <code>podman build</code> pour créer l'image Bootc pour MinIO :</li>
+</ol>
+<p><code>bash
+   sudo podman build -t "${IMAGE_NAME}" -f Containerfile</code></p>
+<p><strong>Remarque</strong> : Le <code>Containerfile</code> doit être présent dans le répertoire de travail.</p>
+<h3 id="etape-4-creer-liso-pour-minio">Étape 4 : Créer l'ISO pour MinIO</h3>
+<ol>
+<li>Définissez les variables nécessaires :</li>
+</ol>
+<p><code>bash
+   export CONFIG_PATH=&lt;votre_chemin&gt;/config.toml
+   export OUTPUT_DIR=&lt;chemin_vers_répertoire_de_sortie&gt;</code></p>
+<ol>
+<li>Exécutez la commande <code>podman run</code> pour générer l'ISO :</li>
+</ol>
+<p><code>bash
+   sudo podman run \
+       --rm \
+       -it \
+       --privileged \
+       --pull=newer \
+       --security-opt label=type:unconfined_t \
+       -v ${CONFIG_PATH}:/config.toml:ro \
+       -v ${OUTPUT_DIR}:/output \
+       -v /var/lib/containers/storage:/var/lib/containers/storage \
+       quay.io/centos-bootc/bootc-image-builder \
+       --type iso \
+       --use-librepo \
+       --local localhost/${IMAGE_NAME}</code></p>
+<p><strong>Remarques</strong> :
+   - Assurez-vous que <code>config.toml</code> est correctement configuré pour votre installation MinIO.
+   - Le répertoire de sortie doit être accessible en écriture pour stocker l'ISO résultant.
+   - L'option <code>--pull=newer</code> garantit l'utilisation de la dernière image <code>bootc-image-builder</code>.
+   - L'option <code>--security-opt label=type:unconfined_t</code> aide à éviter les problèmes liés à SELinux.</p>
+<h3 id="etape-5-installer-centos-stream-9-avec-minio">Étape 5 : Installer CentOS Stream 9 avec MinIO</h3>
+<ol>
+<li>
+<p><strong>Créer un support d'installation amorçable</strong> : Utilisez l'ISO généré pour créer un support d'installation amorçable (par exemple, une clé USB) à l'aide d'un outil comme Rufus (Windows) ou dd (Linux).</p>
+</li>
+<li>
+<p><strong>Démarrer à partir du support</strong> : Insérez le support d'installation dans votre système cible et démarrez à partir de celui-ci.</p>
+</li>
+<li>
+<p><strong>Suivre les instructions d'installation</strong> : Procédez à l'installation en suivant les instructions à l'écran.</p>
+</li>
+<li>
+<p><strong>Vérifier l'installation</strong> : Une fois l'installation terminée, vérifiez que MinIO est en cours d'exécution en contrôlant l'état du service :</p>
+</li>
+</ol>
+<p><code>bash
+   sudo systemctl status MinIO</code></p>
+<h2 id="6-configuration-avancee-optionnel">6. Configuration avancée (optionnel)</h2>
+<h3 id="options-de-configuration-supplementaires">Options de configuration supplémentaires</h3>
+<ul>
+<li><strong>Réplication</strong> : Configurez la réplication des données entre plusieurs nœuds MinIO pour une meilleure résilience.</li>
+<li><strong>Sécurité</strong> : Activez le chiffrement des données et configurez les politiques de sécurité pour protéger vos données.</li>
+</ul>
+<h3 id="securite-et-optimisation">Sécurité et optimisation</h3>
+<ul>
+<li><strong>Sauvegarde</strong> : Mettez en place des sauvegardes régulières pour protéger vos données contre les pertes.</li>
+<li><strong>Surveillance</strong> : Utilisez des outils de surveillance pour suivre les performances et la santé de votre déploiement MinIO.</li>
+</ul>
+<h2 id="7-conclusion">7. Conclusion</h2>
+<h3 id="recapitulatif-des-avantages-de-minio-et-bootc">Récapitulatif des avantages de MinIO et BootC</h3>
+<p>MinIO et BootC offrent une solution puissante et flexible pour le stockage et la gestion des données dans des environnements modernes. La combinaison de ces deux outils permet de créer des infrastructures de stockage évolutives, sécurisées et faciles à gérer.</p>
+<h2 id="8-ressources-supplementaires">8. Ressources supplémentaires</h2>
+<h3 id="liens-vers-les-documentations">Liens vers les documentations</h3>
+<ul>
+<li><a href="https://docs.min.io/">Documentation de MinIO</a></li>
+<li><a href="https://docs.fedoraproject.org/en-US/bootc/">Documentation de BootC</a></li>
+<li><a href="https://osbuild.org/docs/bootc/">Documentation d'OSBuild</a></li>
+</ul>
+<hr />
+<p><strong>Auteur : Romain GASQUET</strong></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "navigation.indexes"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
