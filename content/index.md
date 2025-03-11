@@ -247,3 +247,7 @@ MinIO et BootC offrent une solution puissante et flexible pour le stockage et la
 * [Documentation de MinIO](https://docs.min.io/)
 * [Documentation de BootC](https://docs.fedoraproject.org/en-US/bootc/)
 * [Documentation d'OSBuild](https://osbuild.org/docs/bootc/)
+
+---
+
+**Auteur : Romain GASQUET**
