@@ -1,0 +1,18 @@
+site_name: Déployer MinIO avec BootC
+theme:
+  name: material
+  features:
+  - navigation.tabs
+  - navigation.indexes
+  logo: assets/logo.png
+plugins:
+- search
+repo_url: https://github.com/neutron-IT-organization/minio-bootc-article
+repo_name: neutron-IT-organization/minio-bootc-article
+docs_dir: content
+extra_css:
+  - stylesheets/extra.css
+markdown_extensions:
+  - attr_list
+  - toc:
+      toc_depth: "2-3"
